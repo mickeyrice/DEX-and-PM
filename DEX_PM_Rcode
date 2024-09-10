@@ -1,0 +1,300 @@
+---
+title: " Dex and PM"
+output: 
+  html_notebook:
+    toc: yes
+  html_document:
+    toc: yes
+    df_print: paged
+---
+
+# Load Libaries 
+```{r}
+#install.packages("car")
+#install.packages("lsr")
+#install.packages("MBESS")
+
+#library(car)
+#library(lsr)
+#library(MBESS)
+library(psych)
+library(tidyverse)
+library(apaTables)
+library(dplyr)
+```
+
+# Load Libaries 
+```{r}
+PM <- read_csv("DEX_FA_Data.csv")
+```
+
+# Describe
+```{r}
+PM_Describe <- describe(PM)
+PM_Describe
+```
+# Count demographics info 
+```{r}
+PM %>%
+  filter(Gender == "Male") %>%
+  summarise(count = n())
+```
+
+# Running regression for each factor not controlling for age and gender
+```{r}
+fit6 <- lm(scale(Accuracy) ~ scale(F1), data = PM)
+summary(fit6)
+
+fit7 <- lm(scale(Accuracy) ~ scale(F2), data = PM)
+summary(fit7)
+
+fit8 <- lm(scale(Accuracy) ~ scale(F3), data = PM)
+summary(fit8)
+
+fit9 <- lm(scale(Accuracy) ~ scale(F4), data = PM)
+summary(fit9)
+
+fit10 <- lm(scale(Accuracy) ~ scale(F5), data = PM)
+summary(fit10)
+
+fit11 <- lm(scale(Accuracy) ~ scale(DEXTOTAL), data = PM)
+summary(fit11)
+
+```
+
+# Effect sizes (R-squared) without covariates
+
+## F1 on PM accuracy
+```{r}
+# Model with only DEXTOTAL as the predictor
+simple_model <- lm(Accuracy ~ F1, data = PM)
+
+# R-squared for the simple model
+r_squared <- summary(simple_model)$r.squared
+
+# Print the R-squared value
+print(r_squared)
+```
+
+## F2 on PM accuracy
+```{r}
+# Model with only DEXTOTAL as the predictor
+simple_model <- lm(Accuracy ~ F2, data = PM)
+
+# R-squared for the simple model
+r_squared <- summary(simple_model)$r.squared
+
+# Print the R-squared value
+print(r_squared)
+```
+
+## F3 on PM accuracy
+```{r}
+# Model with only DEXTOTAL as the predictor
+simple_model <- lm(Accuracy ~ F3, data = PM)
+
+# R-squared for the simple model
+r_squared <- summary(simple_model)$r.squared
+
+# Print the R-squared value
+print(r_squared)
+```
+
+## F4 on PM accuracy
+```{r}
+# Model with only DEXTOTAL as the predictor
+simple_model <- lm(Accuracy ~ F4, data = PM)
+
+# R-squared for the simple model
+r_squared <- summary(simple_model)$r.squared
+
+# Print the R-squared value
+print(r_squared)
+```
+
+## F5 on PM accuracy
+```{r}
+# Model with only DEXTOTAL as the predictor
+simple_model <- lm(Accuracy ~ F5, data = PM)
+
+# R-squared for the simple model
+r_squared <- summary(simple_model)$r.squared
+
+# Print the R-squared value
+print(r_squared)
+```
+
+## DEXTOTAL on PM accuracy
+```{r}
+# Model with only DEXTOTAL as the predictor
+simple_model <- lm(Accuracy ~ DEXTOTAL, data = PM)
+
+# R-squared for the simple model
+r_squared <- summary(simple_model)$r.squared
+
+# Print the R-squared value
+print(r_squared)
+```
+
+
+# Correlation table
+```{r}
+#zero order correlation table 
+desctable <- select(PM, F1, F2, F3, F4, F5, DEXTOTAL, Accuracy)
+
+library(apaTables)
+
+apa.cor.table(
+      desctable,
+      filename = "desctable.doc",
+      table.number = 1,
+      show.conf.interval = TRUE,
+      show.sig.stars = TRUE,
+      landscape = TRUE
+)
+
+apa.cor.table(desctable, filename = "desctable.doc")
+
+library(apaTables)
+corrtable <- select(PM, F1, F2, F3, F4, F5, DEXTOTAL, Accuracy)
+apa.cor.table(
+      corrtable,
+      filename = "corrtable2.doc",
+      table.number = 2,
+      show.conf.interval = TRUE,
+      show.sig.stars = TRUE,
+      landscape = TRUE
+)
+apa.cor.table(corrtable, filename = "corrtable.doc")
+```
+
+
+
+
+## Make a scatterplot: F1 & PM Accuracy
+```{r}
+ggplot(PM, aes(x = F1, y = Accuracy)) +
+  geom_point() +
+    geom_smooth(method = "lm", color = "dark green") +
+  labs(title="Intentionality Predicting Prospective Memory",
+       x="Intentionality Score", y = "Accuracy")+
+  theme_classic()  +
+  theme(text = element_text(size = 18))                    
+```
+## Make a scatterplot: F2 & PM Accuracy
+```{r}
+ggplot(PM, aes(x = F2, y = Accuracy)) +
+  geom_point() +
+    geom_smooth(method = "lm", color = "blue") +
+  labs(title="Interference Management Predicting Prospective Memory",
+       x="Interference Management Score", y = "Accuracy")+
+  theme_classic()  +
+  theme(text = element_text(size = 15))                    
+```
+
+## Make a scatterplot: F3 & PM Accuracy
+```{r}
+ggplot(PM, aes(x = F3, y = Accuracy)) +
+  geom_point() +
+    geom_smooth(method = "lm", color = "red") +
+  labs(title="Inhibition Predicting Prospective Memory",
+       x="Inhibition Score", y = "Accuracy")+
+  theme_classic()  +
+  theme(text = element_text(size = 18))                    
+```
+
+## Make a scatterplot: F4 & PM Accuracy
+```{r}
+ggplot(PM, aes(x = F4, y = Accuracy)) +
+  geom_point() +
+    geom_smooth(method = "lm", color = "purple") +
+  labs(title="Planning Predicting Prospective Memory",
+       x="Planning Score", y = "Accuracy")+
+  theme_classic()  +
+  theme(text = element_text(size = 18))                    
+```
+
+## Make a scatterplot: F5 & PM Accuracy
+```{r}
+ggplot(PM, aes(x = F5, y = Accuracy)) +
+  geom_point() +
+    geom_smooth(method = "lm", color = "orange") +
+  labs(title="Social Regulation Predicting Prospective Memory",
+       x="Social Regulation Score", y = "Accuracy")+
+  theme_classic()  +
+  theme(text = element_text(size = 18))                    
+```
+# Checking age and gender to make sure they do not need to be included as covariates
+# Recoding
+```{r}
+
+PM$Sex1<- 0
+PM$Sex1<-ifelse(PM$Gender=="Male",-1, 1)
+
+
+PM$Gender1<- 0
+PM$Gender1<-ifelse(PM$Gender=="Male", 0, 
+                    ifelse(PM$Gender=="Female", 1, 2))
+
+## Explaining code : PM$Gender1<- 0 creates the new variable titled Gender1 
+## PM$Gender1<-ifelse(PM$Gender ==“Male”,0 , ifelse(PM$Gender=="Female", 1, 2))) says “if the Gender is male, they will be 0, if Gender is female, they will be 1, if Gender is anything else it will be 2" 
+
+```
+# Regression: Gender and the variable of interest
+```{r}
+model <- lm(F1 ~ Gender1, data = PM)
+summary(model)
+
+model <- lm(F2 ~ Gender1, data = PM)
+summary(model)
+
+
+model <- lm(F3 ~ Gender1, data = PM)
+summary(model)
+
+
+model <- lm(F4 ~ Gender1, data = PM)
+summary(model)
+
+
+model <- lm(F5 ~ Gender1, data = PM)
+summary(model)
+
+
+model <- lm(DEXTOTAL ~ Gender1, data = PM)
+summary(model)
+
+model <- lm(Accuracy ~ Gender1, data = PM)
+summary(model)
+```
+
+# Regression: Age and the variable of interest
+
+```{r}
+model <- lm(F1 ~ Age, data = PM)
+summary(model)
+
+model <- lm(F2 ~ Age, data = PM)
+summary(model)
+
+
+model <- lm(F3 ~ Age, data = PM)
+summary(model)
+
+
+model <- lm(F4 ~ Age, data = PM)
+summary(model)
+
+
+model <- lm(F5 ~ Age, data = PM)
+summary(model)
+
+
+model <- lm(DEXTOTAL ~ Age, data = PM)
+summary(model)
+
+model <- lm(Accuracy ~ Age, data = PM)
+summary(model)
+```
+
+
